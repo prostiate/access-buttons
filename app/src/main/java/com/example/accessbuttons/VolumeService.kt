@@ -188,7 +188,6 @@ class VolumeService : Service() {
         val themedContext = ContextThemeWrapper(this, R.style.Theme_AccessButtons)
         val root = LayoutInflater.from(themedContext).inflate(R.layout.floating_layout, null)
         val container = root.findViewById<View>(R.id.floatingContainer)
-        val dragHandle = root.findViewById<View>(R.id.dragHandle)
         val upButton = root.findViewById<View>(R.id.btnVolumeUp)
         val downButton = root.findViewById<View>(R.id.btnVolumeDown)
 
@@ -203,7 +202,6 @@ class VolumeService : Service() {
         }
 
         container.setOnTouchListener(rootDragTouch)
-        dragHandle.setOnTouchListener(rootDragTouch)
         upButton.setOnTouchListener(upTouch)
         downButton.setOnTouchListener(downTouch)
 

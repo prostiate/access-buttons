@@ -21,8 +21,10 @@
     <string name="start_floating_controller">Start Floating Controller</string>
     <string name="stop_floating_controller">Stop Floating Controller</string>
     <string name="home_title">AccessButtons Control Deck</string>
-    <string name="home_subtitle">Launch your floating volume orb, then keep MIUI permissions green for maximum stability.</string>
+    <string name="home_subtitle">Control media volume instantly with a lightweight floating overlay optimized for MIUI stability.</string>
     <string name="permission_section_title">Permission Health</string>
+    <string name="action_activate_controller">Activate Controller</string>
+    <string name="action_deactivate_controller">Deactivate Controller</string>
     <string name="status_ready">Status: Ready</string>
     <string name="status_action_required">Status: Action Required</string>
 </resources>

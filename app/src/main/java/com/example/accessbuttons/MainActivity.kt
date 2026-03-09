@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -64,7 +63,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AccessButtonsTheme {
-                PremiumPermissionManagerScreen()
+                HomeScreen()
             }
         }
     }
@@ -146,7 +145,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun PremiumPermissionManagerScreen() {
+    private fun HomeScreen() {
         val lifecycleOwner = LocalLifecycleOwner.current
 
         var hasOverlayPermission by remember { mutableStateOf(false) }
@@ -169,9 +168,9 @@ class MainActivity : ComponentActivity() {
             onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
         }
 
-        val permissionItems = buildList {
+        val setupItems = buildList {
             add(
-                PermissionUiItem(
+                SetupItem(
                     title = getString(R.string.overlay_permission_title),
                     description = getString(R.string.overlay_permission_description),
                     isReady = hasOverlayPermission,
@@ -181,7 +180,7 @@ class MainActivity : ComponentActivity() {
             )
             if (isXiaomiDevice) {
                 add(
-                    PermissionUiItem(
+                    SetupItem(
                         title = getString(R.string.autostart_permission_title),
                         description = getString(R.string.autostart_permission_description),
                         isReady = false,
@@ -191,7 +190,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
             add(
-                PermissionUiItem(
+                SetupItem(
                     title = getString(R.string.battery_permission_title),
                     description = getString(R.string.battery_permission_description),
                     isReady = batteryWhitelisted,
@@ -206,10 +205,10 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF0B1220),
-                            Color(0xFF121A2A),
-                            Color(0xFF1D2638)
+                        listOf(
+                            Color(0xFF090F1F),
+                            Color(0xFF0E172B),
+                            Color(0xFF111D33)
                         )
                     )
                 )
@@ -218,23 +217,23 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxSize()
                     .statusBarsPadding()
-                    .padding(horizontal = 18.dp),
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 item {
-                    HeroCard(
+                    HeaderCard(
                         title = getString(R.string.home_title),
                         subtitle = getString(R.string.home_subtitle)
                     )
                 }
                 item {
-                    ControllerActionsCard(
-                        canStart = hasOverlayPermission,
-                        onLaunch = {
+                    ControllerCard(
+                        canActivate = hasOverlayPermission,
+                        onActivate = {
                             startOverlayService()
                             refreshState()
                         },
-                        onShutdown = ::stopOverlayService
+                        onDeactivate = ::stopOverlayService
                     )
                 }
                 item {
@@ -245,16 +244,18 @@ class MainActivity : ComponentActivity() {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-                items(permissionItems) { item ->
-                    PermissionCard(item)
+                items(setupItems.size) { index ->
+                    SetupRow(item = setupItems[index])
                 }
-                item { Spacer(modifier = Modifier.height(10.dp)) }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
 }
 
-private data class PermissionUiItem(
+private data class SetupItem(
     val title: String,
     val description: String,
     val isReady: Boolean,
@@ -263,89 +264,81 @@ private data class PermissionUiItem(
 )
 
 @Composable
-private fun HeroCard(title: String, subtitle: String) {
+private fun HeaderCard(title: String, subtitle: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 12.dp),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0x22FFFFFF))
+        colors = CardDefaults.cardColors(containerColor = Color(0x1BFFFFFF))
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 18.dp, vertical = 20.dp),
+            modifier = Modifier.padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = title,
-                color = Color(0xFFF8FAFC),
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF8FAFC)
             )
             Text(
                 text = subtitle,
-                color = Color(0xFFC7D2FE),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFFCBD5E1)
             )
         }
     }
 }
 
 @Composable
-private fun ControllerActionsCard(
-    canStart: Boolean,
-    onLaunch: () -> Unit,
-    onShutdown: () -> Unit
+private fun ControllerCard(
+    canActivate: Boolean,
+    onActivate: () -> Unit,
+    onDeactivate: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0x14FFFFFF))
+        colors = CardDefaults.cardColors(containerColor = Color(0x16FFFFFF))
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = if (canStart) {
-                    "Overlay Permission Ready"
+                text = if (canActivate) {
+                    "Controller Ready"
                 } else {
-                    "Overlay Permission Needed"
+                    "Overlay Permission Required"
                 },
-                color = if (canStart) Color(0xFF86EFAC) else Color(0xFFFCA5A5),
                 style = MaterialTheme.typography.labelLarge,
+                color = if (canActivate) Color(0xFF86EFAC) else Color(0xFFFCA5A5),
                 fontWeight = FontWeight.SemiBold
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button(
-                    onClick = onLaunch,
-                    enabled = canStart,
+                    onClick = onActivate,
+                    enabled = canActivate,
                     modifier = Modifier
                         .weight(1f)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(16.dp),
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF4F46E5),
-                        disabledContainerColor = Color(0xFF334155),
-                        contentColor = Color.White
+                        disabledContainerColor = Color(0xFF334155)
                     )
                 ) {
-                    Text(text = "Launch Control")
+                    Text(text = stringResource(id = R.string.action_activate_controller))
                 }
                 Button(
-                    onClick = onShutdown,
+                    onClick = onDeactivate,
                     modifier = Modifier
                         .weight(1f)
-                        .height(52.dp),
-                    shape = RoundedCornerShape(16.dp),
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF0F172A),
+                        containerColor = Color(0xFF0B1324),
                         contentColor = Color(0xFFE2E8F0)
                     )
                 ) {
-                    Text(text = "Stop Control")
+                    Text(text = stringResource(id = R.string.action_deactivate_controller))
                 }
             }
         }
@@ -353,46 +346,46 @@ private fun ControllerActionsCard(
 }
 
 @Composable
-private fun PermissionCard(item: PermissionUiItem) {
+private fun SetupRow(item: SetupItem) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0x11FFFFFF))
+        colors = CardDefaults.cardColors(containerColor = Color(0x14FFFFFF))
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = item.title,
-                color = Color(0xFFF1F5F9),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = item.description,
-                color = Color(0xFFCBD5E1),
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = if (item.isReady) {
-                    "Status: Ready"
-                } else {
-                    "Status: Action Required"
-                },
-                color = if (item.isReady) Color(0xFF86EFAC) else Color(0xFFFDE68A),
-                style = MaterialTheme.typography.labelLarge
-            )
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color(0xFFF1F5F9),
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = item.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFCBD5E1)
+                )
+                Text(
+                    text = if (item.isReady) {
+                        stringResource(id = R.string.status_ready)
+                    } else {
+                        stringResource(id = R.string.status_action_required)
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (item.isReady) Color(0xFF86EFAC) else Color(0xFFFDE68A)
+                )
+            }
             Button(
                 onClick = item.onClick,
-                shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFE2E8F0),
                     contentColor = Color(0xFF0F172A)
-                ),
-                modifier = Modifier.align(Alignment.End)
+                )
             ) {
-                Text(text = item.buttonLabel)
+                Text(item.buttonLabel)
             }
         }
     }

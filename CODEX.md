@@ -25,6 +25,11 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
   - Gradient background, hero panel, action panel, and permission health cards.
   - Improved controller labels (`Launch Control`, `Stop Control`).
   - Permission state auto-refreshes on app resume.
+  - Reorganized to a cleaner structure: header, controller actions, and compact setup rows.
+- Floating overlay visual simplification:
+  - Removed top drag-handle strip.
+  - Overlay now shows only two circular icon controls (`+` and `-`).
+  - Updated Material button shape/insets to remove inner block artifacts.
 
 ## MIUI Troubleshooting Notes
 ### 1) Overlay not visible
@@ -82,6 +87,9 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
   - Added `ACTION_RESET_STATE` in `VolumeService` and trigger from `MainActivity` startup to avoid stale floating-button state.
   - Tuned floating button visuals (`MaterialButton` insets/min size/corner radius) to remove inner white block artifacts.
   - Rebuilt app screen into a premium control-deck layout with improved action naming and permission cards.
+- Further UI cleanup:
+  - Simplified floating overlay to two-button-only presentation.
+  - Refined app menu layout for better information hierarchy and quicker permission navigation.
 
 ## Verification Workflow
 - Recommended local verification order:
