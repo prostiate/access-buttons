@@ -69,6 +69,9 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
   - Full-surface drag handling with tap-vs-drag gesture separation.
 - Repository hygiene:
   - Hardened root `.gitignore` for Android/Gradle/IDE artifacts and secret file types (`.jks`, `.keystore`, `.env*`, `secrets.properties`).
+- Public repository readiness:
+  - Added `README.md` with setup, permissions, verification, troubleshooting, and contribution guidance.
+  - Added `LICENSE` (MIT).
 
 ## Verification Workflow
 - Recommended local verification order:
