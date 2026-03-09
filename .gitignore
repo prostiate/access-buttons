@@ -1,0 +1,46 @@
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Gradle / Build outputs
+.gradle/
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local SDK configuration
+local.properties
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Signing keys and certificates (do not commit secrets)
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+
+# Environment or secret files
+.env
+.env.*
+secrets.properties
+
+# Kotlin / Java artifacts
+*.class
+
+# Android crash and profiling artifacts
+*.hprof
+*.prof
+
+# Fastlane metadata (optional to keep out unless intentionally versioned)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Access Buttons</string>
+    <string name="notification_channel_name">Floating Volume Controller</string>
+    <string name="notification_channel_description">Keeps the volume overlay alive in foreground mode.</string>
+    <string name="notification_title">Floating Volume Controller Running</string>
+    <string name="notification_text">Tap to open controls or stop service.</string>
+    <string name="stop_service">Stop</string>
+    <string name="volume_up">Increase media volume</string>
+    <string name="volume_down">Decrease media volume</string>
+    <string name="permission_manager_title">Permission Manager</string>
+    <string name="permission_manager_subtitle">Enable these permissions to keep the floating controller stable on MIUI.</string>
+    <string name="overlay_permission_title">Display Over Other Apps</string>
+    <string name="overlay_permission_description">Required for the floating glass controller overlay.</string>
+    <string name="autostart_permission_title">Xiaomi Autostart</string>
+    <string name="autostart_permission_description">Enable Autostart in MIUI Security to avoid background kill.</string>
+    <string name="battery_permission_title">Battery Optimization</string>
+    <string name="battery_permission_description">Whitelist the app to prevent aggressive background restrictions.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="open_autostart">Open Autostart</string>
+    <string name="whitelist_app">Whitelist App</string>
+    <string name="start_floating_controller">Start Floating Controller</string>
+    <string name="stop_floating_controller">Stop Floating Controller</string>
+    <string name="status_ready">Status: Ready</string>
+    <string name="status_action_required">Status: Action Required</string>
+</resources>
