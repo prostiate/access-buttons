@@ -42,11 +42,19 @@ class VolumeService : Service() {
     companion object {
         const val ACTION_START = "com.example.accessbuttons.action.START"
         const val ACTION_STOP = "com.example.accessbuttons.action.STOP"
+        const val ACTION_RESET_STATE = "com.example.accessbuttons.action.RESET_STATE"
         const val ACTION_SET_MODE_SYSTEM = "com.example.accessbuttons.action.SET_MODE_SYSTEM"
         const val ACTION_SET_MODE_CUSTOM = "com.example.accessbuttons.action.SET_MODE_CUSTOM"
 
         private const val NOTIFICATION_CHANNEL_ID = "volume_overlay_channel"
         private const val NOTIFICATION_ID = 2001
+        private const val DEFAULT_X_DP = 24
+        private const val DEFAULT_Y_DP = 180
+
+        @Volatile
+        private var isServiceActive = false
+
+        fun isActive(): Boolean = isServiceActive
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -59,6 +67,7 @@ class VolumeService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        isServiceActive = true
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         createNotificationChannel()
@@ -69,6 +78,10 @@ class VolumeService : Service() {
             ACTION_STOP -> {
                 stopSelf()
                 return START_NOT_STICKY
+            }
+            ACTION_RESET_STATE -> {
+                resetOverlayState()
+                return START_STICKY
             }
             ACTION_SET_MODE_SYSTEM -> sliderMode.value = SliderMode.SYSTEM_UI
             ACTION_SET_MODE_CUSTOM -> sliderMode.value = SliderMode.CUSTOM
@@ -85,6 +98,7 @@ class VolumeService : Service() {
     }
 
     override fun onDestroy() {
+        isServiceActive = false
         removeOverlay()
         serviceScope.cancel()
         super.onDestroy()
@@ -167,8 +181,8 @@ class VolumeService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = dpToPx(24)
-            y = dpToPx(180)
+            x = dpToPx(DEFAULT_X_DP)
+            y = dpToPx(DEFAULT_Y_DP)
         }
 
         val themedContext = ContextThemeWrapper(this, R.style.Theme_AccessButtons)
@@ -286,6 +300,18 @@ class VolumeService : Service() {
     private fun updateLayoutSafely(params: WindowManager.LayoutParams) {
         floatingView?.let {
             runCatching { windowManager.updateViewLayout(it, params) }
+        }
+    }
+
+    private fun resetOverlayState() {
+        sliderMode.value = SliderMode.SYSTEM_UI
+        val params = layoutParams
+        if (params != null) {
+            params.x = dpToPx(DEFAULT_X_DP)
+            params.y = dpToPx(DEFAULT_Y_DP)
+            updateLayoutSafely(params)
+            removeOverlay()
+            attachOverlayIfNeeded()
         }
     }
 

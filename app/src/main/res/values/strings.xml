@@ -20,6 +20,9 @@
     <string name="whitelist_app">Whitelist App</string>
     <string name="start_floating_controller">Start Floating Controller</string>
     <string name="stop_floating_controller">Stop Floating Controller</string>
+    <string name="home_title">AccessButtons Control Deck</string>
+    <string name="home_subtitle">Launch your floating volume orb, then keep MIUI permissions green for maximum stability.</string>
+    <string name="permission_section_title">Permission Health</string>
     <string name="status_ready">Status: Ready</string>
     <string name="status_action_required">Status: Action Required</string>
 </resources>

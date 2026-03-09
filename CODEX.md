@@ -12,6 +12,8 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
 - Draggable overlay with smooth snap-to-left/right-edge animation.
 - Drag can start from the whole floating control surface (not only drag-handle strip).
 - Tactile feedback on button press via `HapticFeedbackConstants`.
+- App launch stale-state protection:
+  - If `VolumeService` is active, app startup triggers `ACTION_RESET_STATE` to refresh overlay state and UI.
 - Mode-ready architecture in service:
   - `SYSTEM_UI` mode (shows system volume slider)
   - `CUSTOM` mode placeholder (system slider suppressed)
@@ -19,6 +21,10 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
   - Overlay permission (`Display over other apps`)
   - Xiaomi Autostart shortcut
   - Battery optimization whitelist flow
+- Premium control-deck UI in `MainActivity`:
+  - Gradient background, hero panel, action panel, and permission health cards.
+  - Improved controller labels (`Launch Control`, `Stop Control`).
+  - Permission state auto-refreshes on app resume.
 
 ## MIUI Troubleshooting Notes
 ### 1) Overlay not visible
@@ -72,6 +78,10 @@ Primary device profile: Redmi Note 8 Pro, Android 11, MIUI 12.5.
 - Public repository readiness:
   - Added `README.md` with setup, permissions, verification, troubleshooting, and contribution guidance.
   - Added `LICENSE` (MIT).
+- Overlay and app UX refinement:
+  - Added `ACTION_RESET_STATE` in `VolumeService` and trigger from `MainActivity` startup to avoid stale floating-button state.
+  - Tuned floating button visuals (`MaterialButton` insets/min size/corner radius) to remove inner white block artifacts.
+  - Rebuilt app screen into a premium control-deck layout with improved action naming and permission cards.
 
 ## Verification Workflow
 - Recommended local verification order:
